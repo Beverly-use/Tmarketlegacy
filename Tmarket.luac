@@ -17,7 +17,7 @@ local u8=encoding.UTF8
 local configFolder=getWorkingDirectory().."\\Config\\Tmarket"
 local configPath=configFolder.."\\market_price.ini"
 local cfgPath=configFolder.."\\set.cfg"
-local updateURL="https://raw.githubusercontent.com/Flashlavka/TMARKET/refs/heads/main/update.json"
+local updateURL="https://raw.githubusercontent.com/Beverly-use/Tmarketlegacy/refs/heads/main/update.json"
 local configURL,cachedNick
 local window=imgui.new.bool(false)
 local search=ffi.new("char[128]","")
@@ -59,10 +59,10 @@ local function convertAndRewrite(path)
 end
 
 local function toLowerCyrillic(str)
-  local map={["А"]="а",["Б"]="б",["В"]="в",["Г"]="г",["Д"]="д",["Е"]="е",["Ё"]="ё",["Ж"]="ж",["З"]="з",["И"]="и",
-    ["Й"]="й",["К"]="к",["Л"]="л",["М"]="м",["Н"]="н",["О"]="о",["П"]="п",["Р"]="р",["С"]="с",["Т"]="т",
-    ["У"]="у",["Ф"]="ф",["Х"]="х",["Ц"]="ц",["Ч"]="ч",["Ш"]="ш",["Щ"]="щ",["Ъ"]="ъ",["Ы"]="ы",["Ь"]="ь",
-    ["Э"]="э",["Ю"]="ю",["Я"]="я"}
+  local map={["ГЂ"]="Г ",["ГЃ"]="ГЎ",["Г‚"]="Гў",["Гѓ"]="ГЈ",["Г„"]="Г¤",["Г…"]="ГҐ",["ВЁ"]="Вё",["Г†"]="Г¦",["Г‡"]="Г§",["Г€"]="ГЁ",
+    ["Г‰"]="Г©",["ГЉ"]="ГЄ",["Г‹"]="Г«",["ГЊ"]="Г¬",["ГЌ"]="Г­",["ГЋ"]="Г®",["ГЏ"]="ГЇ",["Гђ"]="Г°",["Г‘"]="Г±",["Г’"]="ГІ",
+    ["Г“"]="Гі",["Г”"]="Гґ",["Г•"]="Гµ",["Г–"]="Г¶",["Г—"]="Г·",["Г"]="Гё",["Г™"]="Г№",["Гљ"]="Гє",["Г›"]="Г»",["Гњ"]="Гј",
+    ["Гќ"]="ГЅ",["Гћ"]="Гѕ",["Гџ"]="Гї"}
   for up,low in pairs(map) do str=str:gsub(up,low) end
   return str:lower()
 end
@@ -259,14 +259,14 @@ function main()
       downloadConfigFile(function()
         loadData()
         applyConversionRates()
-        sampAddChatMessage(string.format("{A47AFF}[Tmarket]{FFFFFF} загружен  |  Активация: {A47AFF}/tm{FFFFFF}  |  Версия: {A47AFF}%s{FFFFFF}  |  Автор: {FFD700}legacy.",thisScript().version),-1)
+        sampAddChatMessage(string.format("{A47AFF}[Tmarket]{FFFFFF} Г§Г ГЈГ°ГіГ¦ГҐГ­  |  ГЂГЄГІГЁГўГ Г¶ГЁГї: {A47AFF}/tm{FFFFFF}  |  Г‚ГҐГ°Г±ГЁГї: {A47AFF}%s{FFFFFF}  |  ГЂГўГІГ®Г°: {FFD700}legacy.",thisScript().version),-1)
         sampRegisterChatCommand("tm",function()
           if window[0] then saveData() end
           window[0]=not window[0]
         end)
       end)
     else
-      sampAddChatMessage(string.format("{A47AFF}[Tmarket]{FFD700} %s{FFFFFF}, у вас {FF4C4C}нет доступа к скрипту{FFFFFF}.",cachedNick or "?"),-1)
+      sampAddChatMessage(string.format("{A47AFF}[Tmarket]{FFD700} %s{FFFFFF}, Гі ГўГ Г± {FF4C4C}Г­ГҐГІ Г¤Г®Г±ГІГіГЇГ  ГЄ Г±ГЄГ°ГЁГЇГІГі{FFFFFF}.",cachedNick or "?"),-1)
     end
   end)
 
@@ -281,7 +281,7 @@ function main()
     end
     imgui.SetNextWindowSize(imgui.ImVec2(windowSize.x,windowSize.y),imgui.Cond.Once)
 
-    if not imgui.Begin(u8("Tmarket — Таблица цен "..thisScript().version..". Автор — legacy."),window) then
+    if not imgui.Begin(u8("Tmarket В— Г’Г ГЎГ«ГЁГ¶Г  Г¶ГҐГ­ "..thisScript().version..". ГЂГўГІГ®Г° В— legacy."),window) then
       imgui.End()
       return
     end
@@ -297,23 +297,23 @@ function main()
     local coefWidth = (availWidth - searchWidth - buttonWidth - spacing * 4) / 2
 
     imgui.PushItemWidth(searchWidth)
-    imgui.InputTextWithHint("##search", u8("Поиск по товарам..."), search, ffi.sizeof(search))
+    imgui.InputTextWithHint("##search", u8("ГЏГ®ГЁГ±ГЄ ГЇГ® ГІГ®ГўГ Г°Г Г¬..."), search, ffi.sizeof(search))
     imgui.PopItemWidth()
 
     imgui.SameLine(0, spacing)
 
-    if imgui.Button(u8("Обновить цены"), imgui.ImVec2(buttonWidth, 0)) then
+    if imgui.Button(u8("ГЋГЎГ­Г®ГўГЁГІГј Г¶ГҐГ­Г»"), imgui.ImVec2(buttonWidth, 0)) then
       if configURL then
         downloadUrlToFile(configURL, configPath, function(_, status)
           if status == moonloader.download_status.STATUSEX_ENDDOWNLOAD then
             convertAndRewrite(configPath)
             loadData()
             applyConversionRates()
-            sampAddChatMessage("{A47AFF}[Tmarket]{FFFFFF} Цены успешно обновлены.", -1)
+            sampAddChatMessage("{A47AFF}[Tmarket]{FFFFFF} Г–ГҐГ­Г» ГіГ±ГЇГҐГёГ­Г® Г®ГЎГ­Г®ГўГ«ГҐГ­Г».", -1)
           end
         end)
       else
-        sampAddChatMessage("{A47AFF}[Tmarket]{FFFFFF} URL конфигурации не найден.", -1)
+        sampAddChatMessage("{A47AFF}[Tmarket]{FFFFFF} URL ГЄГ®Г­ГґГЁГЈГіГ°Г Г¶ГЁГЁ Г­ГҐ Г­Г Г©Г¤ГҐГ­.", -1)
       end
     end
 
@@ -323,7 +323,7 @@ function main()
     local changedBuy = imgui.InputText("##conversionRateBuy", conversionRateBuyBuf, ffi.sizeof(conversionRateBuyBuf))
     imgui.PopItemWidth()
     if imgui.IsItemHovered() then
-      imgui.SetTooltip(u8("Цена VC$ для скупки"))
+      imgui.SetTooltip(u8("Г–ГҐГ­Г  VC$ Г¤Г«Гї Г±ГЄГіГЇГЄГЁ"))
     end
     if changedBuy then buyInputChanged = true end
     if not imgui.IsItemActive() and buyInputChanged then
@@ -342,7 +342,7 @@ function main()
     local changedSell = imgui.InputText("##conversionRateSell", conversionRateSellBuf, ffi.sizeof(conversionRateSellBuf))
     imgui.PopItemWidth()
     if imgui.IsItemHovered() then
-      imgui.SetTooltip(u8("Цена VC$ для продажи"))
+      imgui.SetTooltip(u8("Г–ГҐГ­Г  VC$ Г¤Г«Гї ГЇГ°Г®Г¤Г Г¦ГЁ"))
     end
     if changedSell then sellInputChanged = true end
     if not imgui.IsItemActive() and sellInputChanged then
@@ -374,7 +374,7 @@ function main()
       draw:AddLine(imgui.ImVec2(pos.x+colWidth,y0),imgui.ImVec2(pos.x+colWidth,y1),imgui.GetColorU32(imgui.Col.Separator),1)
       draw:AddLine(imgui.ImVec2(pos.x+2*colWidth,y0),imgui.ImVec2(pos.x+2*colWidth,y1),imgui.GetColorU32(imgui.Col.Separator),1)
       imgui.Columns(3,nil,false)
-      for _,header in ipairs({u8("Товар"),u8("Скупка"),u8("Продажа")}) do
+      for _,header in ipairs({u8("Г’Г®ГўГ Г°"),u8("Г‘ГЄГіГЇГЄГ "),u8("ГЏГ°Г®Г¤Г Г¦Г ")}) do
         imgui.SetCursorPosX(imgui.GetCursorPosX()+(colWidth-imgui.CalcTextSize(header).x)/2)
         imgui.Text(header)
         imgui.NextColumn()
@@ -402,7 +402,7 @@ function main()
       imgui.Columns(1)
       imgui.EndChild()
     else
-      local text=u8("Товары не найдены.")
+      local text=u8("Г’Г®ГўГ Г°Г» Г­ГҐ Г­Г Г©Г¤ГҐГ­Г».")
       local avail=imgui.GetContentRegionAvail()
       local text_size=imgui.CalcTextSize(text)
       imgui.SetCursorPosX((avail.x-text_size.x)*0.5)
